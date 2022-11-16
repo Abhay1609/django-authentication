@@ -6,6 +6,9 @@ from account.renderers import UserRenderer
 from django.contrib.auth import authenticate  
 from rest_framework_simplejwt.tokens import RefreshToken 
 from rest_framework.permissions import IsAuthenticated 
+from .utils import Util
+from django.contrib.sites.shortcuts import get_current_site
+from django.urls import reverse
 
 def get_tokens_for_user(user):
     refresh=RefreshToken.for_user(user)
@@ -21,7 +24,13 @@ class UserRegistrationView(APIView):
         serializer = UserRegistrationSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             user=serializer.save()
-            token=get_tokens_for_user(user)
+            token=str(RefreshToken.for_user(user).access_token)
+            current_site=get_current_site(request).domain
+            relative_link=reverse('email-verify')
+            absurl='http://'+current_site+relative_link+"?token="+ str(token)
+            email_body='Hi '+user.full_name +' Use link below to verify your email \n '+ absurl
+            data={'email_body':email_body,'to_email':user.email,'email_subject':'Verify your email'}
+            Util.send_email(data)
             return Response({'token':token,'msg':'Registartion Successful'},status=status.HTTP_201_CREATED)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 class UserLoginView(APIView):
@@ -37,7 +46,9 @@ class UserLoginView(APIView):
             else:
                 return Response({'errors':{'non_field_errors':['Username or Password is incorrect']}},status=status.HTTP_404_NOT_FOUND)
         return Response(serializer.errors,status.HTTP_400_BAD_REQUEST)
-
+class VerifyEmail(generics.GenericAPIView):
+    def get(self):
+        pass
 
 class LogoutAPIView(generics.GenericAPIView):
     serializer_class=LogoutSerializer
