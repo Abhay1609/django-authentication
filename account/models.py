@@ -13,7 +13,9 @@ class UserManager(BaseUserManager):
         Creates and saves a User with the given email, name ,tc and password.
         """
         if not roll_no:
-            raise ValueError('Users must have a Roll number')
+            raise ValueError('Users must have a Roll number.')
+        if not email:
+            raise ValueError('Users must have a Email.')
 
         user = self.model(
             roll_no=roll_no,
@@ -34,6 +36,10 @@ class UserManager(BaseUserManager):
         """
         Creates and saves a superuser with the given email, name , tc and password.
         """
+        if not roll_no:
+            raise ValueError('Users must have a Roll number.')
+        if not email:
+            raise ValueError('Users must have a Email.')
         user = self.create_user(
             roll_no,
             password=password,
@@ -61,6 +67,7 @@ class User(AbstractBaseUser):
     isverified=models.BooleanField(default=False)
     is_admin=models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
+
 
 
     objects=UserManager()
