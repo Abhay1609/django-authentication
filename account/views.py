@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework import status, generics ,permissions
 from rest_framework.views import APIView
-from account.serializers import UserRegistrationSerializer,UserLoginSerializer,UserProfileSerializer,LogoutSerializer
+from account.serializers import UserRegistrationSerializer,UserLoginSerializer,UserProfileSerializer,LogoutSerializer,EmailVerificationSerializer
 from account.renderers import UserRenderer
 from django.contrib.auth import authenticate  
 from rest_framework_simplejwt.tokens import RefreshToken 
@@ -9,15 +9,13 @@ from rest_framework.permissions import IsAuthenticated
 from .utils import Util
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
+from .models import User
 import jwt
 from django.conf import settings
-def get_tokens_for_user(user):
-    refresh=RefreshToken.for_user(user)
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi 
 
-    return {
-        'refresh':str(refresh),
-        'access':str(refresh.access_token)
-    }
+
 
 class UserRegistrationView(APIView):
     renderer_classes=[UserRenderer] 
@@ -42,25 +40,34 @@ class UserLoginView(APIView):
             password=serializer.data.get('password')
             user=authenticate(roll_no=roll_no,password=password)
             if user is not None:
-                token=get_tokens_for_user(user)
+                token=RefreshToken.for_user(user) 
                 return Response({'token':token,'msg':'Login Succesful'},status=status.HTTP_200_OK)
             else:
                 return Response({'errors':{'non_field_errors':['Username or Password is incorrect']}},status=status.HTTP_404_NOT_FOUND)
         return Response(serializer.errors,status.HTTP_400_BAD_REQUEST)
-class verifyEmail(generics.GenericAPIView):
+class VerifyEmail(APIView):
+    serializers_class=EmailVerificationSerializer
+    #token_param_config=openapi.Parameter('token',in_=openapi.IN_QUERY)
+    #@swagger_auto_schema(manual_parameters=[token_param_config])
     def get(self,request):
         token=request.GET.get('token')
         try:
             payload=jwt.decode(token,settings.SECRET_KEY)
             user=User.objects.get(id=payload['user_id'])
-            if not user.is_verified:
-                user.is_verified = True
+            if not user.isverified:
+                user.isverified=True
                 user.save()
-            return Response({'email':'Successfully activated'}, status=status.HTTP_200_OK)
-        except jwt.ExpiredSignatureError as identifier:
-            return Response({'error': 'Activation Expired'}, status=status.HTTP_400_BAD_REQUEST)
-        except jwt.exceptions.DecodeError as identifier:
-            return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
+
+            return Response({'email':'Successfully activated'},status=status.HTTP_200_OK)
+        except  jwt.ExpiredSignatureError as identifier:
+            return Response({'error':'Activation Link Expired'},status=status.HTTP_400_BAD_REQUEST)
+        except  jwt.exceptions.DecodeError as identifier:
+            return Response({'error':'Invalid Token'},status=status.HTTP_400_BAD_REQUEST)
+        
+            
+
+      
+   
 
 class LogoutAPIView(generics.GenericAPIView):
     serializer_class=LogoutSerializer

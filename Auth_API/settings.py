@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
+    'drf_yasg',
 ]
 AUTH_USER_MODEL='account.User'
 MIDDLEWARE = [
@@ -79,7 +80,6 @@ REST_FRAMEWORK = {
     
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
         # 'rest_framework.authentication.SessionAuthentication',
         # 'knox.auth.TokenAuthentication'
     )
@@ -162,5 +162,5 @@ CORS_ALLOWED_ORIGINS = [
 EMAIL_USE_TLS=True
 EMAIL_HOST='smtp.gmail.com'
 EMAIL_PORT=587
-EMAIL_HOST_USER='abhaypratap9848@gmail.com'#add you email here
-EMAIL_HOST_PASSWORD='fhsqnjhocoyssitc'#add app password
+EMAIL_HOST_USER='divyanshurana312@gmail.com'#add you email here
+EMAIL_HOST_PASSWORD='bhwmoembcdlampjo'#add app password

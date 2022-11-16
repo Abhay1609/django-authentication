@@ -29,7 +29,7 @@ class UserManager(BaseUserManager):
         )
 
         user.set_password(password)
-        # user.save(using=self._db)
+        user.save(using=self._db)
         return user
 
     def create_superuser(self,roll_no, email,year, full_name ,isverified ,branch , gender,mobile_number, password=None):
