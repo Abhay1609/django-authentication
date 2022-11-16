@@ -162,5 +162,5 @@ CORS_ALLOWED_ORIGINS = [
 EMAIL_USE_TLS=True
 EMAIL_HOST='smtp.gmail.com'
 EMAIL_PORT=587
-EMAIL_HOST_USER='divyanshurana312@gmail.com'
-EMAIL_HOST_PASSWORD='jidbyblagwwzofam'
+EMAIL_HOST_USER=' '#add you email here
+EMAIL_HOST_PASSWORD=' '#add app password
