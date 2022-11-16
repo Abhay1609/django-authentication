@@ -1,5 +1,5 @@
 from rest_framework.response import Response
-from rest_framework import status,generic,permissions
+from rest_framework import status, generics ,permissions
 from rest_framework.views import APIView
 from account.serializers import UserRegistrationSerializer,UserLoginSerializer,UserProfileSerializer,LogoutSerializer
 from account.renderers import UserRenderer
@@ -39,7 +39,7 @@ class UserLoginView(APIView):
         return Response(serializer.errors,status.HTTP_400_BAD_REQUEST)
 
 
-class LogoutAPIView(generic.GenericAPIView):
+class LogoutAPIView(generics.GenericAPIView):
     serializer_class=LogoutSerializer
 
     permission_classes = (permissions.IsAuthenticated,)
