@@ -1,7 +1,7 @@
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status,generic,permissions
 from rest_framework.views import APIView
-from account.serializers import UserRegistrationSerializer,UserLoginSerializer,UserProfileSerializer
+from account.serializers import UserRegistrationSerializer,UserLoginSerializer,UserProfileSerializer,LogoutSerializer
 from account.renderers import UserRenderer
 from django.contrib.auth import authenticate  
 from rest_framework_simplejwt.tokens import RefreshToken 
@@ -37,3 +37,17 @@ class UserLoginView(APIView):
             else:
                 return Response({'errors':{'non_field_errors':['Username or Password is incorrect']}},status=status.HTTP_404_NOT_FOUND)
         return Response(serializer.errors,status.HTTP_400_BAD_REQUEST)
+
+
+class LogoutAPIView(generic.GenericAPIView):
+    serializer_class=LogoutSerializer
+
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self,request):
+        serializer= self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
