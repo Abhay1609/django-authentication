@@ -6,24 +6,34 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import smart_str,force_str,smart_bytes,DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode,urlsafe_base64_encode
 
-class UserRegistrationSerializer(serializers.ModelSerializer):
-    #we ae writing password2 beacuse password confirmation is also required
-    password2=serializers.CharField(style={'input_type':'password'},write_only=True)
+class RegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(style={'input_type':'password'},write_only=True)
+
+   
     class Meta:
-        model=User
-        fields=['roll_no','email','full_name','branch','year','gender','mobile_number','password','password2']
+        model = User
+        fields = ['roll_no','email','full_name','branch','year','gender','mobile_number','password','password2','isverified']
         extra_kwargs={
             'password':{'write_only':True}
         }
-    #validating password and confirm password
-    def validate(self,attrs):
-        password = attrs.get('password')
-        password2=attrs.get('password2')
-        if password != password2:
-            raise serializers.ValidationError("Passwords are not matching")
-        return attrs
-    def create(self,validate_data):
-        return User.objects.create_user(**validate_data)
+
+    def validate(self, attrs):
+       password = attrs.get('password')
+       password2=attrs.get('password2')
+       if password != password2:
+        raise serializers.ValidationError("Passwords are not matching")
+       return attrs
+
+    def create(self, validated_data):
+        return User.objects.create_user(**validated_data)
+
+
+class EmailVerificationSerializer(serializers.ModelSerializer):
+    token = serializers.CharField(max_length=555)
+
+    class Meta:
+        model = User
+        fields = ['token']
 class UserLoginSerializer(serializers.ModelSerializer):
     roll_no=serializers.CharField(max_length=14)
     class Meta:
@@ -53,12 +63,7 @@ class LogoutSerializer(serializers.Serializer):
         
         except TokenError:
             self.fail('bad_token')
-class EmailVerificationSerializer(serializers.ModelSerializer):
-    token=serializers.CharField(max_length=555)
 
-    class Meta:
-        model=User
-        fields=['token']
 class ResetPasswordEmailRequestSerializer(serializers.Serializer):
     email=serializers.EmailField(min_length=2)
 

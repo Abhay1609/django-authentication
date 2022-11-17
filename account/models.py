@@ -8,7 +8,7 @@ from django.utils import timezone
 
 
 class UserManager(BaseUserManager):
-    def create_user(self,roll_no,email, full_name ,branch ,year, gender,mobile_number, password=None,password2=None):
+    def create_user(self,roll_no,email, full_name ,branch ,year, gender,mobile_number,isverified, password=None,password2=None):
         """
         Creates and saves a User with the given email, name ,tc and password.
         """
@@ -21,7 +21,7 @@ class UserManager(BaseUserManager):
             roll_no=roll_no,
             email=self.normalize_email(email),
             full_name=full_name,
-            isverified=False,
+            isverified=isverified,
             branch=branch,
             gender=gender,
             mobile_number=mobile_number,
@@ -68,6 +68,7 @@ class User(AbstractBaseUser):
     isverified=models.BooleanField(default=False)
     is_admin=models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
+    password2=models.CharField(max_length=40)
 
 
 
@@ -75,7 +76,7 @@ class User(AbstractBaseUser):
 
 
     USERNAME_FIELD='roll_no'
-    REQUIRED_FIELDS= ['email','full_name','year','gender','mobile_number','branch']
+    REQUIRED_FIELDS= ['email','full_name','year','gender','mobile_number','branch','isverified']
 
     def __str__(self):
         return self.roll_no
