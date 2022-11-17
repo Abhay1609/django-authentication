@@ -2,6 +2,7 @@ from rest_framework import serializers
 from account.models import User
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
+from django.contrib import auth 
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import smart_str,force_str,smart_bytes,DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode,urlsafe_base64_encode
@@ -34,11 +35,31 @@ class EmailVerificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['token']
-class UserLoginSerializer(serializers.ModelSerializer):
+class LoginSerializer(serializers.ModelSerializer):
     roll_no=serializers.CharField(max_length=14)
+    password=serializers.CharField(max_length=68,write_only=True)
+    tokens=serializers.CharField(read_only=True)
     class Meta:
         model=User
-        fields=['roll_no','password'] 
+        fields=['roll_no','password','tokens'] 
+    def validate(self,attrs):
+        roll_no=attrs.get('roll_no','')
+        password=attrs.get('password','')
+
+        user=auth.authenticate(roll_no=roll_no,password=password)
+        if not user:
+            raise AuthenticationFailed('Roll_no or Password is Incorrect!')
+        if not user.isverified:
+            raise AuthenticationFailed('Email is not Verified!')
+        return {
+            'roll_no':user.roll_no,
+            'full_name':user.full_name,
+            'email':user.email,
+            'tokens':user.tokens
+        }
+
+
+
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model=User

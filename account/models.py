@@ -2,13 +2,14 @@ from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import AbstractBaseUser,BaseUserManager
 from django.utils import timezone
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 
 
 
 class UserManager(BaseUserManager):
-    def create_user(self,roll_no,email, full_name ,branch ,year, gender,mobile_number,isverified, password=None,password2=None):
+    def create_user(self,roll_no,email, full_name ,branch ,year, gender,mobile_number, password=None,password2=None):
         """
         Creates and saves a User with the given email, name ,tc and password.
         """
@@ -21,7 +22,6 @@ class UserManager(BaseUserManager):
             roll_no=roll_no,
             email=self.normalize_email(email),
             full_name=full_name,
-            isverified=isverified,
             branch=branch,
             gender=gender,
             mobile_number=mobile_number,
@@ -32,7 +32,7 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self,roll_no, email,year, full_name ,isverified ,branch , gender,mobile_number, password=None):
+    def create_superuser(self,roll_no, email,year, full_name  ,branch , gender,mobile_number, password=None):
         """
         Creates and saves a superuser with the given email, name , tc and password.
         """
@@ -45,7 +45,6 @@ class UserManager(BaseUserManager):
             password=password,
             email=email,
             full_name=full_name,
-            isverified=isverified,
 
             branch=branch,
             gender=gender,
@@ -76,7 +75,7 @@ class User(AbstractBaseUser):
 
 
     USERNAME_FIELD='roll_no'
-    REQUIRED_FIELDS= ['email','full_name','year','gender','mobile_number','branch','isverified']
+    REQUIRED_FIELDS= ['email','full_name','year','gender','mobile_number','branch']
 
     def __str__(self):
         return self.roll_no
@@ -96,6 +95,13 @@ class User(AbstractBaseUser):
         "Is the user a member of staff?"
         # Simplest possible answer: All admins are staff
         return self.is_admin
+
+    def tokens(self):
+        refresh=RefreshToken.for_user(self)
+        return{
+            'refresh': str(refresh),
+            'access':str(refresh.access_token)
+        }
 
 
 # Create your models here.

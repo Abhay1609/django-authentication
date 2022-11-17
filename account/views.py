@@ -1,7 +1,14 @@
 from rest_framework.response import Response
 from rest_framework import status, generics ,permissions
 from rest_framework.views import APIView
-from account.serializers import RegisterSerializer,UserLoginSerializer,UserProfileSerializer,LogoutSerializer,EmailVerificationSerializer,ResetPasswordEmailRequestSerializer,SetNewPasswordSerializer
+from account.serializers import( 
+RegisterSerializer,
+UserProfileSerializer,
+LoginSerializer,
+LogoutSerializer,
+EmailVerificationSerializer,
+ResetPasswordEmailRequestSerializer,
+SetNewPasswordSerializer)
 from account.renderers import UserRenderer
 from django.contrib.auth import authenticate  
 from rest_framework_simplejwt.tokens import RefreshToken 
@@ -35,7 +42,7 @@ class RegisterView(generics.GenericAPIView):
         serializer.save()
         user_data = serializer.data
         user = User.objects.get(email=user_data['email'])
-        token = RefreshToken.for_user(user).access_token
+        token = str(RefreshToken.for_user(user).access_token)
         current_site = get_current_site(request).domain
         relativeLink = reverse('email-verify')
         absurl = 'http://'+current_site+relativeLink+"?token="+str(token)
@@ -68,19 +75,13 @@ class VerifyEmail(APIView):
              return Response({'error': 'Activation Expired'}, status=status.HTTP_400_BAD_REQUEST)
         except jwt.exceptions.DecodeError as identifier:
              return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
-class UserLoginView(APIView):
-    def post(self,request,format=None):
-        serializer = UserLoginSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            roll_no=serializer.data.get('roll_no')
-            password=serializer.data.get('password')
-            user=authenticate(roll_no=roll_no,password=password)
-            if user is not None:
-                token=RefreshToken.for_user(user) 
-                return Response({'token':token,'msg':'Login Succesful'},status=status.HTTP_200_OK)
-            else:
-                return Response({'errors':{'non_field_errors':['Username or Password is incorrect']}},status=status.HTTP_404_NOT_FOUND)
-        return Response(serializer.errors,status.HTTP_400_BAD_REQUEST)
+class LoginAPIView(generics.GenericAPIView):
+    serializer_class=LoginSerializer
+    def post(self,request):
+        serializer=self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+
 
         
             
