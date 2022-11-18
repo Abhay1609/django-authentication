@@ -164,8 +164,8 @@ EMAIL_USE_TLS=True
 EMAIL_HOST='smtp.gmail.com'
 EMAIL_PORT=587
 
-EMAIL_HOST_USER='divyanshurana312@gmail.com'#add you email here
-EMAIL_HOST_PASSWORD='esmcchviesjdcwix'#add app password
+EMAIL_HOST_USER='drapitest312@gmail.com'#add you email here
+EMAIL_HOST_PASSWORD='puphlmaqynxixqsa'#add app password
 django_heroku.settings(locals())
 
 
