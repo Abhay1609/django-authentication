@@ -33,7 +33,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
-    'rest_framework_recaptcha'
+    # 'rest_framework_recaptcha',
+    # "drf_recaptcha",
 ]
 AUTH_USER_MODEL='account.User'
 MIDDLEWARE = [
@@ -169,6 +170,6 @@ EMAIL_HOST_PASSWORD='fhsqnjhocoyssitc'#add app password
 django_heroku.settings(locals())
 
 
-DRF_RECAPTCHA_SECRET_KEY = "6LcBahYjAAAAADclWs6Tv7UKe0uB1nmIbCneUbOz"
+# DRF_RECAPTCHA_SECRET_KEY = "6LcBahYjAAAAADclWs6Tv7UKe0uB1nmIbCneUbOz"
 # RECAPTCHA_PUBLIC_KEY = '6LcBahYjAAAAANpwaAoiboONz9pt0xyVMX-314rG'
 # RECAPTCHA_PRIVATE_KEY = '6LcBahYjAAAAADclWs6Tv7UKe0uB1nmIbCneUbOz'

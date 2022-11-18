@@ -6,7 +6,7 @@ from django.contrib import auth
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import smart_str,force_str,smart_bytes,DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode,urlsafe_base64_encode
-from rest_framework_recaptcha.fields import ReCaptchaField
+# from rest_framework_recaptcha.fields import ReCaptchaField
  
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -117,6 +117,6 @@ class SetNewPasswordSerializer(serializers.Serializer):
         return super().validate(attrs)
 
 
-class ReCaptchaSerializer(serializers.Serializer):
-    recaptcha = ReCaptchaField()  
+# class ReCaptchaSerializer(serializers.Serializer):
+#     recaptcha = ReCaptchaField()  
 

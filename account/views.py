@@ -8,7 +8,8 @@ LoginSerializer,
 LogoutSerializer,
 EmailVerificationSerializer,
 ResetPasswordEmailRequestSerializer,
-SetNewPasswordSerializer,ReCaptchaSerializer)
+SetNewPasswordSerializer)
+# ReCaptchaSerializer )
 from account.renderers import UserRenderer
 from django.contrib.auth import authenticate  
 from rest_framework_simplejwt.tokens import RefreshToken 
@@ -142,11 +143,11 @@ class SetNewPasswordAPIView(generics.GenericAPIView):
         return Response({'sucess':True,'message':'Password reset success'},status=status.HTTP_200_OK)
 
 
-class VerifyTokenAPI(views.APIView):
-    allowed_methods = ["POST"]
+# class VerifyTokenAPI(views.APIView):
+#     allowed_methods = ["POST"]
 
-    def post(self, request, *args, **kwargs):
-        serializer = ReCaptchaSerializer(data=request.data)
-        if serializer.is_valid():
-            return Response({'success': True}, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     def post(self, request, *args, **kwargs):
+#         serializer = ReCaptchaSerializer(data=request.data)
+#         if serializer.is_valid():
+#             return Response({'success': True}, status=status.HTTP_200_OK)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
