@@ -164,3 +164,7 @@ EMAIL_HOST='smtp.gmail.com'
 EMAIL_PORT=587
 EMAIL_HOST_USER='abhaypratap9848@gmail.com'#add you email here
 EMAIL_HOST_PASSWORD='fhsqnjhocoyssitc'#add app password
+
+
+# RECAPTCHA_PUBLIC_KEY = '6LcBahYjAAAAANpwaAoiboONz9pt0xyVMX-314rG'
+# RECAPTCHA_PRIVATE_KEY = '6LcBahYjAAAAADclWs6Tv7UKe0uB1nmIbCneUbOz'
