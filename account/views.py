@@ -28,7 +28,7 @@ from django.utils.http import urlsafe_base64_decode,urlsafe_base64_encode
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 from .utils import Util
-
+from django.utils.translation import gettext_lazy 
 
 class RegisterView(generics.GenericAPIView):
 
