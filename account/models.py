@@ -9,7 +9,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 
 class UserManager(BaseUserManager):
-    def create_user(self,roll_no,email, full_name ,branch ,year, gender,mobile_number, password=None,password2=None):
+    def create_user(self,roll_no,email, full_name ,branch ,year, gender,mobile_number, password2,password=None):
         """
         Creates and saves a User with the given email, name ,tc and password.
         """
@@ -25,7 +25,8 @@ class UserManager(BaseUserManager):
             branch=branch,
             gender=gender,
             mobile_number=mobile_number,
-            year=year
+            year=year,
+            password2=password2
         )
 
         user.set_password(password)
@@ -75,7 +76,7 @@ class User(AbstractBaseUser):
 
 
     USERNAME_FIELD='roll_no'
-    REQUIRED_FIELDS= ['email','full_name','year','gender','mobile_number','branch']
+    REQUIRED_FIELDS= ['email','full_name','year','gender','mobile_number','branch','password2']
 
     def __str__(self):
         return self.roll_no
