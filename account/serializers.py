@@ -88,10 +88,18 @@ class LogoutSerializer(serializers.Serializer):
 
 class ResetPasswordEmailRequestSerializer(serializers.Serializer):
     email=serializers.EmailField(min_length=2)
-    
 
     class Meta:
+        model=User
         field = ['email']
+    def validate(self,attrs):
+        email= attrs.get('email','')
+        user= auth.authenticate(email=email)
+        if not user:
+            raise AuthenticationFailed('Email is Incorrect')
+        if not user.isverified:
+            raise AuthenticationFailed('Email is not Verified!')
+
 class SetNewPasswordSerializer(serializers.Serializer):
     password=serializers.CharField(min_length=6,max_length=68,write_only=True)
     token = serializers.CharField(min_length=1, write_only=True)

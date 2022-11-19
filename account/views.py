@@ -118,7 +118,11 @@ class RequestPasswordRestEmail(generics.GenericAPIView):
             email_body = "Hello use this password to login \n"+"Your Old Password:"+ user.password2
             data = {'email_body': email_body, 'to_email': user.email, 'email_subject': 'Reset your Password'}
             Util.send_email(data)
-        return Response({'sucess':'We have sent you a link of reset password'},status=status.HTTP_200_OK)
+            return Response({'sucess':'We have sent you a link of reset password'},status=status.HTTP_200_OK)
+        else:
+            return Response({'error':'Email is not valid request for new one'},status=status.HTTP_401_UNAUTHORIZED)
+        
+        
 class PasswordTokenCheckAPI(generics.GenericAPIView):
     serializer_class = SetNewPasswordSerializer
     def get(self,request,uidb64,token):
