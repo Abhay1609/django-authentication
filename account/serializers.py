@@ -88,6 +88,7 @@ class LogoutSerializer(serializers.Serializer):
 
 class ResetPasswordEmailRequestSerializer(serializers.Serializer):
     email=serializers.EmailField(min_length=2)
+    
 
     class Meta:
         field = ['email']
