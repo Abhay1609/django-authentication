@@ -134,7 +134,8 @@ class PasswordTokenCheckAPI(generics.GenericAPIView):
 
             if not PasswordResetTokenGenerator().check_token(user,token):
                 return Response({'error':'Token is not valid request for new one'},status=status.HTTP_401_UNAUTHORIZED)
-            return Response({'success': True, 'message': 'creadentials Valid', 'uidb64': uidb64, 'token': token},status=status.HTTP_200_OK)
+            #return Response({'success': True, 'message': 'creadentials Valid', 'uidb64': uidb64, 'token': token},status=status.HTTP_200_OK)
+            return redirect("https:signup-login-form-1.netlify.app/" ,{'success': True, 'message': 'creadentials Valid', 'uidb64': uidb64, 'token': token})
         except DjangoUnicodeDecodeError as identifier:
             if not PasswordResetTokenGenerator().check_token(user):
                 return Response({'error':'Token is not  vlaid'},status=status.HTTP_401_UNAUTHORIZED)
